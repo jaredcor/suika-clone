@@ -12,7 +12,148 @@
 </head>
 <body>
 
-<script type="text/javascript" src="/game.js"></script>
+<script type="text/javascript">
+const config = {
+    type: Phaser.AUTO,
+    width: 1280,
+    height: 720,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 300 },
+            debug: false
+        }
+    },
+    scene: {
+        preload: preload,
+        create: create,
+        update: update
+    }
+};
+
+const game = new Phaser.Game(config);
+
+var player;
+var container;
+var curr_ball = 0;
+var next_ball = Phaser.Math.RND.between(0, 4);
+
+const wall_x1 = 440;
+const mouse_y = 135;
+const wall_y = 440;
+const wall_x2 = 874;
+const floor_y = 650;
+const floor_x = 640;
+
+// Debugging
+var lockText;
+var text;
+
+function preload ()
+{
+    // cherry -> strawberry -> grape -> dekopon -> orange -> apple -> pear -> peach -> pineapple -> melon -> watermelon
+    this.load.image('falco', 'assets/falco.png', { width: 30, height: 30 });   
+    this.load.image('sheik', 'assets/sheik.png', { width: 40, height: 40 });
+    this.load.image('ics', 'assets/ice-climbers.png', { width: 55, height: 55 });
+    this.load.image('pikachu', 'assets/pikachu.png', { width: 65, height: 65 });
+    this.load.image('fox', 'assets/fox.png', { width: 80, height: 80 });
+    this.load.image('yoshi', 'assets/yoshi.png', { width: 105, height: 105 });
+    this.load.image('jigglypuff', 'assets/jigglypuff.png', { width: 120, height: 120 });
+    this.load.image('marth', 'assets/marth.png', { width: 150, height: 150 });
+    this.load.image('kirby', 'assets/kirby.png', { width: 185, height: 185 } );
+    this.load.image('luigi', 'assets/luigi.png', { width: 205, height: 205 });
+    this.load.image('falcon', 'assets/falcon.png', { width: 230, height: 230 });
+    
+    this.load.image('wall', 'assets/wall.png');
+    this.load.image('floor', 'assets/floor.png');
+    
+    this.load.image('hand', 'assets/sprites/hand.png');
+}
+
+function create ()
+{
+    this.cameras.main.backgroundColor.setTo(243, 194, 76);
+    
+    container = this.physics.add.staticGroup();
+    container.create(wall_x1, wall_y, 'wall');
+    container.create(wall_x2, wall_y, 'wall');
+    container.create(floor_x, floor_y, 'floor');
+
+    balls = this.physics.add.group();
+        
+    player = this.add.sprite(657, mouse_y, 'hand').setScale(0.15);
+
+    // Pointer lock will only work after an 'engagement gesture', e.g. mousedown, keypress, etc.
+    this.input.on('pointerdown', function (pointer)
+    {
+        this.input.mouse.requestPointerLock();
+    }, this);
+    
+    // When locked, you will have to use the movementX and movementY properties of the pointer
+    // (since a locked cursor's xy position does not update)
+    this.input.on('pointermove', function (pointer)
+    {
+        if (this.input.mouse.locked)
+        {
+            player.x += pointer.movementX;
+            player.y = mouse_y;
+            // Force the sprite to stay on screen
+            player.x = Phaser.Math.Wrap(player.x, wall_x1 - 2, wall_x2 - 2);
+    
+            player.setRotation(0);
+            updateLockText(true);
+    
+            text = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+            this.input.on('pointerdown', function (pointer)
+            {
+                curr_ball = this.next_ball;
+                this.next_ball = Phaser.Math.RND.between(0, 4);
+            }, this);
+        }
+    }, this);
+    // Exit pointer lock when Q is pressed. Browsers will also exit pointer lock when escape is
+    // pressed.
+    this.input.keyboard.on('keydown-Q', function (event)
+    {
+        if (this.input.mouse.locked)
+        {
+            this.input.mouse.releasePointerLock();
+        }
+    }, this);
+    
+    // Optionally, you can subscribe to the game's pointer lock change event to know when the player
+    // enters/exits pointer lock. This is useful if you need to update the UI, change to a custom
+    // mouse cursor, etc.
+    this.input.manager.events.on('pointerlockchange', event =>
+    {
+        updateLockText(event.isPointerLocked, player.x, player.y);
+    });
+    lockText = this.add.text(16, 16, '', {
+        fontSize: '20px',
+        fill: '#ffffff'
+    });
+    
+    updateLockText(false);
+    
+    this.physics.add.collider(balls, container);
+}
+
+function update ()
+{
+}
+
+function updateLockText (isLocked)
+{
+    this.lockText.setText([
+        isLocked ? 'The pointer is locked!' : 'The pointer is unlocked.',
+        'Press Q to release pointer lock.',
+        `Current Ball: ${curr_ball}`,
+        `Next Ball: ${next_ball}`
+    ]);
+}
+    
+</script>
+
 
 </body>
 </html>
