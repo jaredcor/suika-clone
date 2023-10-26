@@ -1,0 +1,9 @@
+{
+  "name": "suika-melee-clone",
+  "version": "0.1.0",
+  "description": "Suika clone (Phaser 3 + JavaScript)",
+  "author": "Jared Cortez",
+  "dependencies": {
+    "phaser": "^3.60.0"
+  }
+}
