@@ -1,0 +1,345 @@
+{
+	"textures": [
+		{
+			"image": "sprites.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 984,
+				"h": 960
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "hand.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 881,
+						"h": 456
+					},
+					"spriteSourceSize": {
+						"x": 7,
+						"y": 7,
+						"w": 862,
+						"h": 426
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 862,
+						"h": 426
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				},
+				{
+					"filename": "container.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 720,
+						"h": 720
+					},
+					"spriteSourceSize": {
+						"x": 17,
+						"y": 49,
+						"w": 490,
+						"h": 530
+					},
+					"frame": {
+						"x": 1,
+						"y": 429,
+						"w": 490,
+						"h": 530
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				},
+				{
+					"filename": "luigi.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 144,
+						"h": 144
+					},
+					"spriteSourceSize": {
+						"x": 13,
+						"y": 0,
+						"w": 118,
+						"h": 144
+					},
+					"frame": {
+						"x": 865,
+						"y": 1,
+						"w": 118,
+						"h": 144
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				},
+				{
+					"filename": "fox.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 144,
+						"h": 144
+					},
+					"spriteSourceSize": {
+						"x": 14,
+						"y": 1,
+						"w": 115,
+						"h": 142
+					},
+					"frame": {
+						"x": 865,
+						"y": 147,
+						"w": 115,
+						"h": 142
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				},
+				{
+					"filename": "jigglypuff.png",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 144,
+						"h": 144
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 144,
+						"h": 144
+					},
+					"frame": {
+						"x": 493,
+						"y": 429,
+						"w": 144,
+						"h": 144
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				},
+				{
+					"filename": "iceclimbers.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 144,
+						"h": 144
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 3,
+						"w": 144,
+						"h": 138
+					},
+					"frame": {
+						"x": 639,
+						"y": 429,
+						"w": 144,
+						"h": 138
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				},
+				{
+					"filename": "pikachu.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 144,
+						"h": 144
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 9,
+						"w": 144,
+						"h": 124
+					},
+					"frame": {
+						"x": 785,
+						"y": 429,
+						"w": 144,
+						"h": 124
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				},
+				{
+					"filename": "kirby.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 144,
+						"h": 144
+					},
+					"spriteSourceSize": {
+						"x": 2,
+						"y": 3,
+						"w": 141,
+						"h": 137
+					},
+					"frame": {
+						"x": 785,
+						"y": 555,
+						"w": 141,
+						"h": 137
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				},
+				{
+					"filename": "yoshi.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 144,
+						"h": 144
+					},
+					"spriteSourceSize": {
+						"x": 3,
+						"y": 7,
+						"w": 140,
+						"h": 129
+					},
+					"frame": {
+						"x": 639,
+						"y": 569,
+						"w": 140,
+						"h": 129
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				},
+				{
+					"filename": "falcon.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 144,
+						"h": 144
+					},
+					"spriteSourceSize": {
+						"x": 4,
+						"y": 0,
+						"w": 137,
+						"h": 143
+					},
+					"frame": {
+						"x": 493,
+						"y": 575,
+						"w": 137,
+						"h": 143
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				},
+				{
+					"filename": "sheik.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 144,
+						"h": 144
+					},
+					"spriteSourceSize": {
+						"x": 4,
+						"y": 0,
+						"w": 136,
+						"h": 144
+					},
+					"frame": {
+						"x": 781,
+						"y": 694,
+						"w": 136,
+						"h": 144
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				},
+				{
+					"filename": "falco.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 144,
+						"h": 144
+					},
+					"spriteSourceSize": {
+						"x": 7,
+						"y": 0,
+						"w": 130,
+						"h": 144
+					},
+					"frame": {
+						"x": 632,
+						"y": 700,
+						"w": 130,
+						"h": 144
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				},
+				{
+					"filename": "marth.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 144,
+						"h": 144
+					},
+					"spriteSourceSize": {
+						"x": 12,
+						"y": 0,
+						"w": 119,
+						"h": 144
+					},
+					"frame": {
+						"x": 493,
+						"y": 720,
+						"w": 119,
+						"h": 144
+					},
+					"anchor": {
+						"x": 0.5,
+						"y": 0.5
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:8e1fa6aaf09f53589060bac96d6ed023:442153f6db5ac6da8da7d29f4b764555:1eabdf11f75e3a4fe3147baf7b5be24b$"
+	}
+}

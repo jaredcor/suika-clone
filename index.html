@@ -16,12 +16,11 @@
 const config = {
     type: Phaser.AUTO,
     width: 1280,
-    height: 720,
+    height: 720, 
     physics: {
-        default: 'arcade',
-        arcade: {
-            gravity: { y: 300 },
-            debug: false
+        default: 'matter',
+        matter: {
+            debug: true
         }
     },
     scene: {
@@ -35,8 +34,8 @@ const game = new Phaser.Game(config);
 
 var player;
 var container;
-var curr_ball = 0;
-var next_ball = Phaser.Math.RND.between(0, 4);
+var curr_stock = 0;
+var next_stock = Phaser.Math.RND.between(0, 4);
 
 const wall_x1 = 440;
 const mouse_y = 135;
@@ -49,46 +48,42 @@ const floor_x = 640;
 var lockText;
 var text;
 
+/*  
+    FRUIT ORDER:
+    cherry -> strawberry -> grape -> dekopon -> orange -> apple -> pear -> peach -> pineapple -> melon -> watermelon
+    falco -> sheik -> ics -> pikachu -> fox -> yoshi -> jigglypuff -> marth -> kirby -> luigi -> falcon
+*/
+
 function preload ()
 {
-    // cherry -> strawberry -> grape -> dekopon -> orange -> apple -> pear -> peach -> pineapple -> melon -> watermelon
-    this.load.image('falco', 'assets/falco.png', { width: 30, height: 30 });   
-    this.load.image('sheik', 'assets/sheik.png', { width: 40, height: 40 });
-    this.load.image('ics', 'assets/ice-climbers.png', { width: 55, height: 55 });
-    this.load.image('pikachu', 'assets/pikachu.png', { width: 65, height: 65 });
-    this.load.image('fox', 'assets/fox.png', { width: 80, height: 80 });
-    this.load.image('yoshi', 'assets/yoshi.png', { width: 105, height: 105 });
-    this.load.image('jigglypuff', 'assets/jigglypuff.png', { width: 120, height: 120 });
-    this.load.image('marth', 'assets/marth.png', { width: 150, height: 150 });
-    this.load.image('kirby', 'assets/kirby.png', { width: 185, height: 185 } );
-    this.load.image('luigi', 'assets/luigi.png', { width: 205, height: 205 });
-    this.load.image('falcon', 'assets/falcon.png', { width: 230, height: 230 });
+    // Load sprite sheet generated with TexturePacker 
+    this.load.atlas('sheet', 'assets/sprites/sprites.png', 'assets/sprites/sprites.json');
+    // Load body shapes from JSON file generated with PhysicsEditor
+    this.load.json('shapes', 'assets/sprites/shapes.json');
     
-    this.load.image('wall', 'assets/wall.png');
-    this.load.image('floor', 'assets/floor.png');
-    
-    this.load.image('hand', 'assets/sprites/hand.png');
+    // this.load.image('hand', 'assets/sprites/hand.png');
 }
 
 function create ()
 {
+    var shapes = this.cache.json.get('shapes')
+    // this.matter.world.setBounds(0, 0, game.config.width, game.config.height);
+    this.matter.world.setBounds(400, 140, 474, 540);
     this.cameras.main.backgroundColor.setTo(243, 194, 76);
-    
-    container = this.physics.add.staticGroup();
-    container.create(wall_x1, wall_y, 'wall');
-    container.create(wall_x2, wall_y, 'wall');
-    container.create(floor_x, floor_y, 'floor');
+    var container = this.matter.add.sprite(0, 0, 'sheet', 'container.png', {shape: shapes.container});
+    container.setPosition(400, 140);
+    this.matter.alignBody(container, 635, 690, Phaser.Display.Align.BOTTOM_CENTER);
 
-    balls = this.physics.add.group();
+    player = this.add.sprite(657, mouse_y, 'sheet', 'hand.png').setScale(0.15);
+
+    var shapeKeys = ['falco.png', 'sheik.png', 'iceclimbers.png', 'pikachu.png', 'fox.png'];
         
-    player = this.add.sprite(657, mouse_y, 'hand').setScale(0.15);
-
     // Pointer lock will only work after an 'engagement gesture', e.g. mousedown, keypress, etc.
     this.input.on('pointerdown', function (pointer)
     {
         this.input.mouse.requestPointerLock();
     }, this);
-    
+
     // When locked, you will have to use the movementX and movementY properties of the pointer
     // (since a locked cursor's xy position does not update)
     this.input.on('pointermove', function (pointer)
@@ -104,13 +99,35 @@ function create ()
             updateLockText(true);
     
             text = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
-            this.input.on('pointerdown', function (pointer)
+            this.input.on('pointerup', function (pointer)
             {
-                curr_ball = this.next_ball;
-                this.next_ball = Phaser.Math.RND.between(0, 4);
+                var stock = shapeKeys[curr_stock];
+                curr_stock = this.next_stock;
+                next_stock = Phaser.Math.RND.between(0, 4);
+                switch(stock)
+                {
+                    case 'falco.png':
+                        this.matter.add.sprite(pointer.x, mouse_y, 'sheet', 'falco.png', {shape: shapes.falco}).setScale(0.15);
+                        break;
+                    case 'sheik.png':
+                        this.matter.add.sprite(pointer.x, mouse_y, 'sheet', 'sheik.png', {shape: shapes.sheik}).setScale(0.2);
+                        break;
+                    case 'iceclimbers.png':
+                        this.matter.add.sprite(pointer.x, mouse_y, 'sheet', 'iceclimbers.png', {shape: shapes.iceclimbers}).setScale(0.3); 
+                        break;
+                    case 'pikachu.png':
+                        this.matter.add.sprite(pointer.x, mouse_y, 'sheet', 'pikachu.png', {shape: shapes.pikachu}).setScale(0.35);
+                        break;
+                    case 'fox.png':
+                        this.matter.add.sprite(pointer.x, mouse_y, 'sheet', 'fox.png', {shape: shapes.fox}).setScale(0.4);
+                        break;
+                    default:
+                        break;
+                }
             }, this);
         }
     }, this);
+
     // Exit pointer lock when Q is pressed. Browsers will also exit pointer lock when escape is
     // pressed.
     this.input.keyboard.on('keydown-Q', function (event)
@@ -134,8 +151,6 @@ function create ()
     });
     
     updateLockText(false);
-    
-    this.physics.add.collider(balls, container);
 }
 
 function update ()
@@ -147,8 +162,8 @@ function updateLockText (isLocked)
     this.lockText.setText([
         isLocked ? 'The pointer is locked!' : 'The pointer is unlocked.',
         'Press Q to release pointer lock.',
-        `Current Ball: ${curr_ball}`,
-        `Next Ball: ${next_ball}`
+        `Curr: ${curr_stock}`,
+        `Next: ${next_stock}`
     ]);
 }
     
