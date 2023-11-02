@@ -1,174 +1,139 @@
-<!doctype html> 
-<html lang="en"> 
-<head> 
+<!DOCTYPE html>
+<html lang="en">
+  <head>
     <meta charset="UTF-8" />
     <title>Suika Game - Smash Clone</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.js"></script>
     <style type="text/css">
-        body {
-            align-items: center;
-        }
+      body {
+        align-items: center;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <script type="text/javascript">
+      const config = {
+        type: Phaser.AUTO,
+        width: 1280,
+        height: 720,
+        backgroundColor: "#f2c34c",
+        parent: "suika-clone",
+        physics: {
+          default: "matter",
+          matter: {
+            debug: true,
+          },
+        },
+        scene: {
+          preload: preload,
+          create: create,
+          update: update,
+        },
+      };
 
-<script type="text/javascript">
-const config = {
-    type: Phaser.AUTO,
-    width: 1280,
-    height: 720, 
-    physics: {
-        default: 'matter',
-        matter: {
-            debug: true
-        }
-    },
-    scene: {
-        preload: preload,
-        create: create,
-        update: update
-    }
-};
+      const game = new Phaser.Game(config);
 
-const game = new Phaser.Game(config);
+      const mouse_y = 135;
 
-var player;
-var container;
-var curr_stock = 0;
-var next_stock = Phaser.Math.RND.between(0, 4);
+      // FRUIT ORDER:
+      // cherry -> strawberry -> grape -> dekopon -> orange -> apple -> pear -> peach -> pineapple -> melon -> watermelon
+      // falco -> sheik -> ics -> pikachu -> fox -> yoshi -> jigglypuff -> marth -> kirby -> luigi -> falcon
 
-const wall_x1 = 440;
-const mouse_y = 135;
-const wall_y = 440;
-const wall_x2 = 874;
-const floor_y = 650;
-const floor_x = 640;
+      function preload() {
+        // Load sprite sheet generated with TexturePacker
+        this.load.atlas(
+          "sheet",
+          "assets/sprites/sprites.png",
+          "assets/sprites/sprites.json"
+        );
+        // Load body shapes from JSON file generated with PhysicsEditor
+        this.load.json("shapes", "assets/sprites/shapes.json");
+      }
 
-// Debugging
-var lockText;
-var text;
+      function create() {
+        this.matter.world.setBounds(405, 98, 460, 590);
+        var shapes = this.cache.json.get("shapes");
 
-/*  
-    FRUIT ORDER:
-    cherry -> strawberry -> grape -> dekopon -> orange -> apple -> pear -> peach -> pineapple -> melon -> watermelon
-    falco -> sheik -> ics -> pikachu -> fox -> yoshi -> jigglypuff -> marth -> kirby -> luigi -> falcon
-*/
+        var container = this.matter.add.sprite(
+          0,
+          0,
+          "sheet",
+          "container.png",
+          { shape: shapes.container },
+          { isStatic: true }
+        );
+        container.setPosition(400, 140);
+        this.matter.alignBody(
+          container,
+          635,
+          690,
+          Phaser.Display.Align.BOTTOM_CENTER
+        );
 
-function preload ()
-{
-    // Load sprite sheet generated with TexturePacker 
-    this.load.atlas('sheet', 'assets/sprites/sprites.png', 'assets/sprites/sprites.json');
-    // Load body shapes from JSON file generated with PhysicsEditor
-    this.load.json('shapes', 'assets/sprites/shapes.json');
-    
-    // this.load.image('hand', 'assets/sprites/hand.png');
-}
+        // TODO: put back master hand sprite as cursor
+        // this.player = this.add.sprite(657, mouse_y, 'sheet', 'hand.png').setScale(0.15);
 
-function create ()
-{
-    var shapes = this.cache.json.get('shapes')
-    // this.matter.world.setBounds(0, 0, game.config.width, game.config.height);
-    this.matter.world.setBounds(400, 140, 474, 540);
-    this.cameras.main.backgroundColor.setTo(243, 194, 76);
-    var container = this.matter.add.sprite(0, 0, 'sheet', 'container.png', {shape: shapes.container});
-    container.setPosition(400, 140);
-    this.matter.alignBody(container, 635, 690, Phaser.Display.Align.BOTTOM_CENTER);
+        var shapeKeys = [
+          "falco.png",
+          "sheik.png",
+          "iceclimbers.png",
+          "pikachu.png",
+          "fox.png",
+        ];
 
-    player = this.add.sprite(657, mouse_y, 'sheet', 'hand.png').setScale(0.15);
+        this.input.on(
+          "pointerup",
+          function (pointer) {
+            var i = shapeKeys[Phaser.Math.RND.between(0, 4)];
+            console.log(i);
+            switch (i) {
+              case "falco.png":
+                var falco = this.matter.add
+                  .sprite(pointer.x, mouse_y, "sheet", i, {
+                    shape: shapes.falco,
+                  })
+                  .setScale(0.2);
+                break;
+              case "sheik.png":
+                var sheik = this.matter.add
+                  .sprite(pointer.x, mouse_y, "sheet", i, {
+                    shape: shapes.sheik,
+                  })
+                  .setScale(0.25);
+                break;
+              case "iceclimbers.png":
+                var ics = this.matter.add
+                  .sprite(pointer.x, mouse_y, "sheet", i, {
+                    shape: shapes.iceclimbers,
+                  })
+                  .setScale(0.3);
+                break;
+              case "pikachu.png":
+                var pikachu = this.matter.add
+                  .sprite(pointer.x, mouse_y, "sheet", i, {
+                    shape: shapes.pikachu,
+                  })
+                  .setScale(0.35);
+                break;
+              case "fox.png":
+                var fox = this.matter.add
+                  .sprite(pointer.x, mouse_y, "sheet", i, { shape: shapes.fox })
+                  .setScale(0.4);
+              default:
+                break;
+            }
+          },
+          this
+        );
 
-    var shapeKeys = ['falco.png', 'sheik.png', 'iceclimbers.png', 'pikachu.png', 'fox.png'];
-        
-    // Pointer lock will only work after an 'engagement gesture', e.g. mousedown, keypress, etc.
-    this.input.on('pointerdown', function (pointer)
-    {
-        this.input.mouse.requestPointerLock();
-    }, this);
+        // TODO: detect objects as individual sprites
+        this.matter.world.on("collisionstart", (event, bodyA, bodyB) => {
+          console.log(`collision between ${bodyA} and ${bodyB}`);
+          // collision between [object Object] and [object Object]
+        });
+      }
 
-    // When locked, you will have to use the movementX and movementY properties of the pointer
-    // (since a locked cursor's xy position does not update)
-    this.input.on('pointermove', function (pointer)
-    {
-        if (this.input.mouse.locked)
-        {
-            player.x += pointer.movementX;
-            player.y = mouse_y;
-            // Force the sprite to stay on screen
-            player.x = Phaser.Math.Wrap(player.x, wall_x1 - 2, wall_x2 - 2);
-    
-            player.setRotation(0);
-            updateLockText(true);
-    
-            text = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
-            this.input.on('pointerup', function (pointer)
-            {
-                var stock = shapeKeys[curr_stock];
-                curr_stock = this.next_stock;
-                next_stock = Phaser.Math.RND.between(0, 4);
-                switch(stock)
-                {
-                    case 'falco.png':
-                        this.matter.add.sprite(pointer.x, mouse_y, 'sheet', 'falco.png', {shape: shapes.falco}).setScale(0.15);
-                        break;
-                    case 'sheik.png':
-                        this.matter.add.sprite(pointer.x, mouse_y, 'sheet', 'sheik.png', {shape: shapes.sheik}).setScale(0.2);
-                        break;
-                    case 'iceclimbers.png':
-                        this.matter.add.sprite(pointer.x, mouse_y, 'sheet', 'iceclimbers.png', {shape: shapes.iceclimbers}).setScale(0.3); 
-                        break;
-                    case 'pikachu.png':
-                        this.matter.add.sprite(pointer.x, mouse_y, 'sheet', 'pikachu.png', {shape: shapes.pikachu}).setScale(0.35);
-                        break;
-                    case 'fox.png':
-                        this.matter.add.sprite(pointer.x, mouse_y, 'sheet', 'fox.png', {shape: shapes.fox}).setScale(0.4);
-                        break;
-                    default:
-                        break;
-                }
-            }, this);
-        }
-    }, this);
-
-    // Exit pointer lock when Q is pressed. Browsers will also exit pointer lock when escape is
-    // pressed.
-    this.input.keyboard.on('keydown-Q', function (event)
-    {
-        if (this.input.mouse.locked)
-        {
-            this.input.mouse.releasePointerLock();
-        }
-    }, this);
-    
-    // Optionally, you can subscribe to the game's pointer lock change event to know when the player
-    // enters/exits pointer lock. This is useful if you need to update the UI, change to a custom
-    // mouse cursor, etc.
-    this.input.manager.events.on('pointerlockchange', event =>
-    {
-        updateLockText(event.isPointerLocked, player.x, player.y);
-    });
-    lockText = this.add.text(16, 16, '', {
-        fontSize: '20px',
-        fill: '#ffffff'
-    });
-    
-    updateLockText(false);
-}
-
-function update ()
-{
-}
-
-function updateLockText (isLocked)
-{
-    this.lockText.setText([
-        isLocked ? 'The pointer is locked!' : 'The pointer is unlocked.',
-        'Press Q to release pointer lock.',
-        `Curr: ${curr_stock}`,
-        `Next: ${next_stock}`
-    ]);
-}
-    
-</script>
-
-
-</body>
+      function update() {}
+    </script>
+  </body>
 </html>
