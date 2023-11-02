@@ -54,14 +54,16 @@
         this.matter.world.setBounds(405, 98, 460, 590);
         var shapes = this.cache.json.get("shapes");
 
-        var container = this.matter.add.sprite(
-          0,
-          0,
-          "sheet",
-          "container.png",
-          { shape: shapes.container },
-          { isStatic: true }
-        );
+        var container = this.matter.add
+          .sprite(
+            0,
+            0,
+            "sheet",
+            "container.png",
+            { shape: shapes.container },
+            { isStatic: true }
+          )
+          .setName("container");
         container.setPosition(400, 140);
         this.matter.alignBody(
           container,
@@ -70,7 +72,7 @@
           Phaser.Display.Align.BOTTOM_CENTER
         );
 
-        // TODO: put back master hand sprite as cursor
+        // TODO: Put back master hand sprite as cursor
         // this.player = this.add.sprite(657, mouse_y, 'sheet', 'hand.png').setScale(0.15);
 
         var shapeKeys = [
@@ -86,39 +88,47 @@
           function (pointer) {
             var i = shapeKeys[Phaser.Math.RND.between(0, 4)];
             console.log(i);
+            // TODO: Fix size scaling
             switch (i) {
               case "falco.png":
-                var falco = this.matter.add
+                this.matter.add
                   .sprite(pointer.x, mouse_y, "sheet", i, {
                     shape: shapes.falco,
                   })
+                  .setName("falco")
                   .setScale(0.2);
                 break;
               case "sheik.png":
-                var sheik = this.matter.add
+                this.matter.add
                   .sprite(pointer.x, mouse_y, "sheet", i, {
                     shape: shapes.sheik,
                   })
-                  .setScale(0.25);
+                  .setName("sheik")
+                  .setScale(0.3);
                 break;
               case "iceclimbers.png":
-                var ics = this.matter.add
+                this.matter.add
                   .sprite(pointer.x, mouse_y, "sheet", i, {
                     shape: shapes.iceclimbers,
                   })
-                  .setScale(0.3);
+                  .setName("ics")
+                  .setScale(0.4);
                 break;
               case "pikachu.png":
-                var pikachu = this.matter.add
+                this.matter.add
                   .sprite(pointer.x, mouse_y, "sheet", i, {
                     shape: shapes.pikachu,
                   })
-                  .setScale(0.35);
+                  .setName("pikachu")
+                  .setScale(0.5);
                 break;
               case "fox.png":
-                var fox = this.matter.add
-                  .sprite(pointer.x, mouse_y, "sheet", i, { shape: shapes.fox })
-                  .setScale(0.4);
+                this.matter.add
+                  .sprite(pointer.x, mouse_y, "sheet", i, {
+                    shape: shapes.fox,
+                  })
+                  .setName("fox")
+                  .setScale(0.6);
               default:
                 break;
             }
@@ -126,10 +136,10 @@
           this
         );
 
-        // TODO: detect objects as individual sprites
+        // TODO: detect game object sprites as not undefined
         this.matter.world.on("collisionstart", (event, bodyA, bodyB) => {
-          console.log(`collision between ${bodyA} and ${bodyB}`);
-          // collision between [object Object] and [object Object]
+          console.log(`collision between ${bodyA.name} and ${bodyB.name}`);
+          // collision between undefined and undefined
         });
       }
 
